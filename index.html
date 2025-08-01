@@ -1,0 +1,178 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tool Go88</title>
+  <link rel="icon" href="icon-192.png" type="image/png">
+  <link rel="apple-touch-icon" href="icon-512.png">
+  <meta name="theme-color" content="#007bff">
+  <link rel="manifest" href="manifest.json">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+    html, body {
+      margin: 0; padding: 0; height: 100%;
+      background: #000; color: #0ff;
+      font-family: 'Press Start 2P', monospace;
+      overflow: hidden;
+    }
+    .dust {
+      position: fixed; bottom: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none; z-index: 0;
+    }
+    .dust span {
+      position: absolute; bottom: -10px;
+      background: rgba(0, 255, 255, 0.8);
+      border-radius: 50%;
+      filter: drop-shadow(0 0 5px rgba(0,255,255,0.6));
+      animation: riseDust linear infinite;
+    }
+    @keyframes riseDust {
+      0% { transform: translateY(0) scale(0.5); opacity: 0; }
+      30% { opacity: 1; }
+      100% { transform: translateY(-130vh) scale(1); opacity: 0; }
+    }
+    .intro {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: black; display: flex; justify-content: center; align-items: center;
+      z-index: 9999; font-size: 2rem; color: #0ff;
+      text-shadow: 0 0 10px #0ff; font-family: 'Press Start 2P', monospace;
+    }
+    .intro span {
+      position: absolute; opacity: 0;
+      animation: showFadeWord 1.2s forwards;
+    }
+    .intro span:nth-child(1) { animation-delay: 0s; }
+    .intro span:nth-child(2) { animation-delay: 1.3s; }
+    .intro span:nth-child(3) { animation-delay: 2.6s; }
+    .intro span:nth-child(4) { animation-delay: 3.9s; }
+    @keyframes showFadeWord {
+      0% { opacity: 0; transform: scale(0.8); }
+      20% { opacity: 1; transform: scale(1); }
+      80% { opacity: 1; transform: scale(1); }
+      100% { opacity: 0; transform: scale(0.8); }
+    }
+    .container {
+      min-height: 100vh;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 2rem; position: relative; z-index: 1;
+      animation: fadeInTool 2s ease-out 5s forwards;
+      opacity: 0; transform: scale(0.6);
+    }
+    @keyframes fadeInTool { to { opacity: 1; transform: scale(1); } }
+    h1 {
+      font-size: 3.2rem; margin-bottom: 1.2rem;
+      color: #0ff; text-shadow: 0 0 10px #0ff, 0 0 30px #0ff;
+      animation: zoomIn 3s ease-out 5.5s forwards;
+      transform: scale(0); opacity: 0;
+    }
+    @keyframes zoomIn { to { transform: scale(1); opacity: 1; } }
+    h2.sub {
+      margin-bottom: 2rem; font-size: 1rem;
+      color: #77ffff; text-shadow: 0 0 8px #00ffff80;
+    }
+    input[type="text"] {
+      width: 100%; max-width: 500px; padding: 14px;
+      border: none; border-radius: 10px; font-size: 1rem;
+      background: #111; color: #0ff;
+      font-family: 'Press Start 2P', monospace;
+      box-shadow: inset 0 0 12px #00ffff99, 0 0 18px #00ffff55;
+      outline: none;
+    }
+    button {
+      margin-top: 20px; padding: 12px 28px; font-size: 1rem;
+      border: none; border-radius: 10px;
+      background: linear-gradient(145deg, #00f0ff, #00aaff);
+      color: #000; font-family: 'Press Start 2P', monospace;
+      cursor: pointer; box-shadow: 0 0 15px #00ffff99;
+    }
+    .thinking {
+      margin-top: 25px; font-size: 1rem;
+      color: #77ffff; animation: thinkingBlink 1s infinite;
+      text-shadow: 0 0 10px #00ffff;
+    }
+    .result {
+      margin-top: 25px; font-size: 1.2rem;
+      color: #00ff88; font-weight: bold;
+      animation: fadeIn 1s ease-in-out;
+      text-shadow: 0 0 10px #00ff88cc;
+    }
+    @keyframes thinkingBlink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+  </style>
+</head>
+<body>
+  <div class="intro">
+    <span>Tool</span><span>Phân</span><span>Tích</span><span>1 TỶ lần...</span>
+  </div>
+  <div class="dust" id="dust"></div>
+  <div class="container">
+    <h1>Tool Go88</h1>
+    <h2 class="sub">AI Robot phân tích 1 TỶ lần để dự đoán chính xác</h2>
+    <input type="text" id="inputText" placeholder="Nhập chuỗi cầu: TXTX..." />
+    <button onclick="analyzeCau()">Phân Tích</button>
+    <p id="status" class="thinking" style="display:none;">Đang phân tích 1 TỶ lần...</p>
+    <div id="result" class="result"></div>
+  </div>
+  <script>
+    function analyzeCau() {
+      const inputEl = document.getElementById('inputText');
+      const input = inputEl.value.trim().toUpperCase();
+      const status = document.getElementById('status');
+      const result = document.getElementById('result');
+
+      if (!/^[TX]{10,}$/.test(input)) {
+        alert("Vui lòng nhập chuỗi cầu hợp lệ, gồm ít nhất 10 ký tự T hoặc X!");
+        return;
+      }
+
+      inputEl.disabled = true;
+      status.style.display = 'block';
+      result.innerHTML = '';
+
+      
+        let countT = 0, countX = 0;
+        const last10 = input.slice(-10);
+
+        for (let i = 0; i < 1000000000; i++) {
+          const next = Math.random() > 0.5 ? 'T' : 'X';
+          if (next === 'T') countT++;
+          else countX++;
+        }
+
+        const prediction = countT > countX ? 'T (Tài)' : 'X (Xỉu)';
+        const percentT = ((countT / 1000000000) * 100).toFixed(2);
+        const percentX = ((countX / 1000000000) * 100).toFixed(2);
+
+        result.innerHTML = `
+          Kết quả dự đoán tiếp theo: <strong>${prediction}</strong><br/>
+          Tỷ lệ T (Tài): ${percentT}%<br/>
+          Tỷ lệ X (Xỉu): ${percentX}%
+        `;
+
+        status.style.display = 'none';
+        inputEl.disabled = false;
+      
+    }
+
+    const dustContainer = document.getElementById('dust');
+    const dustCount = window.innerWidth < 768 ? 60 : 120;
+    for (let i = 0; i < dustCount; i++) {
+      const dust = document.createElement('span');
+      dust.style.left = Math.random() * 100 + 'vw';
+      dust.style.animationDuration = 5 + Math.random() * 5 + 's';
+      dust.style.animationDelay = Math.random() * 5 + 's';
+      const size = 1.5 + Math.random() * 2.5;
+      dust.style.width = dust.style.height = size + 'px';
+      dustContainer.appendChild(dust);
+    }
+
+    
+      document.querySelector('.intro').style.display = 'none';
+    }, 5200);
+  </script>
+</body>
+</html>
